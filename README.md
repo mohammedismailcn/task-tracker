@@ -1,4 +1,4 @@
-# Task Tracker
+# Zenith - Task Tracker
 
 A simple and easy-to-use task tracker created for my own purpose and daily productivity needs.
 
