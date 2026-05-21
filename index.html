@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zenith | Ultimate Task Tracker, Notepad & Sketch</title>
+    <!-- Google Fonts: Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="theme-default">
+    <!-- Background Elements -->
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+    <div class="bg-glow bg-glow-3"></div>
+
+    <!-- App Container -->
+    <div class="app-container">
+        
+        <!-- Audio Autoplay Unlock Bar -->
+        <div id="audio-unlock-banner" class="audio-unlock-banner hidden">
+            <div class="banner-content">
+                <i class="fa-solid fa-volume-high fa-beat-fade"></i>
+                <span>Browser has muted audio. Click here to enable sound alerts for your deadlines.</span>
+            </div>
+            <button id="unlock-audio-btn" class="btn btn-unlock">Enable Sound</button>
+        </div>
+
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <div class="brand-logo">
+                    <i class="fa-solid fa-compass-drafting"></i>
+                </div>
+                <h2>Zenith</h2>
+            </div>
+
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="nav-item active" data-tab="dashboard">
+                        <i class="fa-solid fa-chart-pie"></i>
+                        <span>Dashboard</span>
+                    </li>
+                    <li class="nav-item" data-tab="tasks">
+                        <i class="fa-solid fa-list-check"></i>
+                        <span>Tasks</span>
+                    </li>
+                    <li class="nav-item" data-tab="notepad">
+                        <i class="fa-solid fa-note-sticky"></i>
+                        <span>Notepad</span>
+                    </li>
+                    <li class="nav-item" data-tab="drawboard">
+                        <i class="fa-solid fa-pen-ruler"></i>
+                        <span>Draw Board</span>
+                    </li>
+                    <li class="nav-item" data-tab="settings">
+                        <i class="fa-solid fa-sliders"></i>
+                        <span>Settings</span>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="quick-status">
+                    <span id="sidebar-time">12:00 PM</span>
+                    <span id="sidebar-date">May 21, 2026</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+
+            <!-- 1. DASHBOARD VIEW -->
+            <section id="view-dashboard" class="app-view active">
+                <header class="view-header">
+                    <div>
+                        <h1>Overview</h1>
+                        <p class="subtitle">Here's your schedule at a glance.</p>
+                    </div>
+                </header>
+
+                <div class="dashboard-grid">
+                    <!-- Progress Card -->
+                    <div class="glass-card stat-card progress-card">
+                        <h3>Task Completion</h3>
+                        <div class="progress-circle-container">
+                            <svg class="progress-ring" width="120" height="120">
+                                <circle class="progress-ring-circle-bg" stroke="rgba(255,255,255,0.05)" stroke-width="8" fill="transparent" r="50" cx="60" cy="60"/>
+                                <circle id="dashboard-progress-ring" class="progress-ring-circle" stroke="var(--accent-color)" stroke-width="8" fill="transparent" r="50" cx="60" cy="60"/>
+                            </svg>
+                            <div class="progress-value" id="dashboard-progress-percentage">0%</div>
+                        </div>
+                        <div class="stat-meta">
+                            <span id="dashboard-tasks-completed">0 / 0 Completed</span>
+                        </div>
+                    </div>
+
+                    <!-- Small Stat Grid -->
+                    <div class="stat-subgrid">
+                        <div class="glass-card stat-card text-center">
+                            <div class="stat-icon alert-icon">
+                                <i class="fa-solid fa-clock"></i>
+                            </div>
+                            <span class="stat-num" id="dashboard-pending-count">0</span>
+                            <span class="stat-label">Pending Tasks</span>
+                        </div>
+                        <div class="glass-card stat-card text-center">
+                            <div class="stat-icon warning-icon">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                            </div>
+                            <span class="stat-num" id="dashboard-overdue-count">0</span>
+                            <span class="stat-label">Overdue Tasks</span>
+                        </div>
+                        <div class="glass-card stat-card text-center">
+                            <div class="stat-icon notepad-icon">
+                                <i class="fa-solid fa-notes-medical"></i>
+                            </div>
+                            <span class="stat-num" id="dashboard-notes-count">0</span>
+                            <span class="stat-label">Notes Saved</span>
+                        </div>
+                        <div class="glass-card stat-card text-center">
+                            <div class="stat-icon canvas-icon">
+                                <i class="fa-solid fa-palette"></i>
+                            </div>
+                            <span class="stat-num" id="dashboard-drawings-count">0</span>
+                            <span class="stat-label">Drawings Saved</span>
+                        </div>
+                    </div>
+
+                    <!-- Upcoming Deadlines -->
+                    <div class="glass-card dashboard-list-card">
+                        <h3>Upcoming Alerts & Deadlines</h3>
+                        <div class="upcoming-list" id="dashboard-upcoming-list">
+                            <div class="empty-state">
+                                <i class="fa-solid fa-circle-check"></i>
+                                <p>No upcoming deadlines. You're all caught up!</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Notes Widget -->
+                    <div class="glass-card dashboard-list-card">
+                        <h3>Recent Note Snapshot</h3>
+                        <div class="quick-note-widget" id="dashboard-note-widget">
+                            <div class="empty-state">
+                                <i class="fa-solid fa-file-pen"></i>
+                                <p>No notes written yet. Start notepad to scribble.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. TASKS VIEW -->
+            <section id="view-tasks" class="app-view">
+                <header class="view-header">
+                    <div>
+                        <h1>Daily Tasks</h1>
+                        <p class="subtitle">Organize and monitor deadlines with audible alerts.</p>
+                    </div>
+                    <button class="btn btn-primary" id="open-add-task-btn">
+                        <i class="fa-solid fa-plus"></i> Add New Task
+                    </button>
+                </header>
+
+                <!-- Filter / Search Bar -->
+                <div class="glass-card filter-bar">
+                    <div class="search-input-wrapper">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="task-search" placeholder="Search tasks...">
+                    </div>
+                    <div class="filters">
+                        <button class="filter-btn active" data-filter="all">All</button>
+                        <button class="filter-btn" data-filter="pending">Pending</button>
+                        <button class="filter-btn" data-filter="completed">Completed</button>
+                        <button class="filter-btn" data-filter="high">High Priority</button>
+                        <button class="filter-btn" data-filter="overdue">Overdue</button>
+                    </div>
+                    <div class="sorting">
+                        <select id="task-sort" class="select-input">
+                            <option value="deadline">Deadline: Soonest</option>
+                            <option value="priority">Priority: Highest</option>
+                            <option value="created">Created: Newest</option>
+                            <option value="title">Alphabetical</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Task Cards Grid -->
+                <div class="tasks-grid" id="tasks-container">
+                    <!-- Tasks will be dynamically injected here -->
+                </div>
+            </section>
+
+            <!-- 3. NOTEPAD VIEW -->
+            <section id="view-notepad" class="app-view">
+                <div class="notepad-layout">
+                    <!-- Notes Sidebar -->
+                    <div class="glass-card notepad-sidebar">
+                        <div class="sidebar-header">
+                            <h3>My Notes</h3>
+                            <button id="add-note-btn" class="btn-icon" title="New Note">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                        <div class="search-input-wrapper note-search-wrapper">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="note-search" placeholder="Search notes...">
+                        </div>
+                        <div class="notes-list" id="notes-list-container">
+                            <!-- Notes items list injected here -->
+                        </div>
+                    </div>
+
+                    <!-- Note Editor -->
+                    <div class="glass-card notepad-editor" id="note-editor-container">
+                        <!-- If no notes exist -->
+                        <div id="no-note-selected" class="empty-editor">
+                            <i class="fa-solid fa-file-signature"></i>
+                            <h3>Select or Create a Note</h3>
+                            <p>Write ideas, draft structures, or insert sketches.</p>
+                            <button id="create-first-note-btn" class="btn btn-primary mt-3">Create Note</button>
+                        </div>
+
+                        <!-- Editor Panel -->
+                        <div id="active-note-editor" class="editor-panel hidden">
+                            <div class="editor-header">
+                                <input type="text" id="note-title-input" class="note-title-field" placeholder="Note Title...">
+                                <div class="editor-actions">
+                                    <span class="autosave-indicator" id="autosave-tag">
+                                        <i class="fa-solid fa-cloud-arrow-up"></i> Saved
+                                    </span>
+                                    <button class="btn btn-secondary btn-sm" id="insert-drawing-btn">
+                                        <i class="fa-solid fa-image"></i> Insert Drawing
+                                    </button>
+                                    <button class="btn btn-danger btn-sm btn-icon-only" id="delete-note-btn" title="Delete Note">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="editor-content-area">
+                                <textarea id="note-textarea" class="note-editor-textarea" placeholder="Start typing your thoughts here..."></textarea>
+                                <!-- Rendered Markdown / Image preview zone -->
+                                <div id="note-preview-area" class="note-preview-container hidden"></div>
+                            </div>
+                            <div class="editor-footer">
+                                <span id="note-word-count">0 words</span>
+                                <div class="editor-mode-toggles">
+                                    <button id="note-mode-edit" class="btn-toggle active" title="Edit Mode">
+                                        <i class="fa-solid fa-code"></i> Edit
+                                    </button>
+                                    <button id="note-mode-preview" class="btn-toggle" title="Preview Mode">
+                                        <i class="fa-solid fa-eye"></i> Preview
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. DRAW BOARD VIEW -->
+            <section id="view-drawboard" class="app-view">
+                <div class="drawboard-layout">
+                    <!-- Canvas Drawing Area -->
+                    <div class="canvas-wrapper">
+                        <!-- Floating Toolbar (Excalidraw style) -->
+                        <div class="canvas-toolbar">
+                            <!-- Tool buttons -->
+                            <div class="toolbar-group">
+                                <button class="tool-btn active" data-tool="pen" title="Brush / Freehand">
+                                    <i class="fa-solid fa-pencil"></i>
+                                </button>
+                                <button class="tool-btn" data-tool="line" title="Draw Line">
+                                    <i class="fa-solid fa-slash"></i>
+                                </button>
+                                <button class="tool-btn" data-tool="rect" title="Rectangle">
+                                    <i class="fa-regular fa-square"></i>
+                                </button>
+                                <button class="tool-btn" data-tool="circle" title="Circle">
+                                    <i class="fa-regular fa-circle"></i>
+                                </button>
+                                <button class="tool-btn" data-tool="eraser" title="Eraser">
+                                    <i class="fa-solid fa-eraser"></i>
+                                </button>
+                            </div>
+
+                            <div class="toolbar-divider"></div>
+
+                            <!-- Colors (presets) -->
+                            <div class="toolbar-group">
+                                <div class="color-swatch-picker">
+                                    <button class="swatch-btn active" style="background-color: #ffffff;" data-color="#ffffff"></button>
+                                    <button class="swatch-btn" style="background-color: #a78bfa;" data-color="#a78bfa"></button>
+                                    <button class="swatch-btn" style="background-color: #f43f5e;" data-color="#f43f5e"></button>
+                                    <button class="swatch-btn" style="background-color: #3b82f6;" data-color="#3b82f6"></button>
+                                    <button class="swatch-btn" style="background-color: #10b981;" data-color="#10b981"></button>
+                                    <button class="swatch-btn" style="background-color: #f59e0b;" data-color="#f59e0b"></button>
+                                    <div class="custom-color-picker-wrapper">
+                                        <i class="fa-solid fa-eye-dropper"></i>
+                                        <input type="color" id="draw-color-picker" value="#ffffff">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="toolbar-divider"></div>
+
+                            <!-- Stroke Width -->
+                            <div class="toolbar-group">
+                                <label for="draw-stroke-width"><i class="fa-solid fa-lines-leaning"></i></label>
+                                <select id="draw-stroke-width" class="select-input select-sm">
+                                    <option value="2">Thin</option>
+                                    <option value="5" selected>Medium</option>
+                                    <option value="10">Thick</option>
+                                    <option value="20">Extra Thick</option>
+                                </select>
+                            </div>
+
+                            <div class="toolbar-divider"></div>
+
+                            <!-- Action buttons -->
+                            <div class="toolbar-group">
+                                <button class="action-btn" id="draw-undo" title="Undo">
+                                    <i class="fa-solid fa-rotate-left"></i>
+                                </button>
+                                <button class="action-btn" id="draw-redo" title="Redo">
+                                    <i class="fa-solid fa-rotate-right"></i>
+                                </button>
+                                <button class="action-btn text-danger" id="draw-clear" title="Clear Canvas">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            </div>
+
+                            <div class="toolbar-divider"></div>
+
+                            <!-- Export buttons -->
+                            <div class="toolbar-group">
+                                <button class="btn btn-secondary btn-sm" id="draw-save-gallery" title="Save to Notepad Gallery">
+                                    <i class="fa-solid fa-folder-plus"></i> Save Image
+                                </button>
+                                <button class="btn btn-primary btn-sm" id="draw-download" title="Download PNG">
+                                    <i class="fa-solid fa-download"></i> Export
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Drawing Canvas -->
+                        <canvas id="sketchpad" width="800" height="600"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. SETTINGS VIEW -->
+            <section id="view-settings" class="app-view">
+                <header class="view-header">
+                    <div>
+                        <h1>Configuration Settings</h1>
+                        <p class="subtitle">Customize notifications, themes, and sound profiles.</p>
+                    </div>
+                </header>
+
+                <div class="settings-grid">
+                    <!-- Alarm & Sound Settings -->
+                    <div class="glass-card settings-card">
+                        <h3><i class="fa-solid fa-bell"></i> Audio & Alerts</h3>
+                        
+                        <div class="setting-row">
+                            <div class="setting-info">
+                                <span class="setting-label">Master Alert Sound</span>
+                                <span class="setting-description">Select the default ringtone for task deadlines.</span>
+                            </div>
+                            <select id="settings-default-sound" class="select-input">
+                                <option value="chime">Harmonic Zen Chime</option>
+                                <option value="beep">Digital Double Beep</option>
+                                <option value="urgent">Urgent Warning Pulse</option>
+                                <option value="melody">Relaxing Melody Chime</option>
+                            </select>
+                        </div>
+
+                        <div class="setting-row">
+                            <div class="setting-info">
+                                <span class="setting-label">Alarm Volume</span>
+                                <span class="setting-description">Adjust volume for audio synthesized alerts.</span>
+                            </div>
+                            <div class="slider-wrapper">
+                                <i class="fa-solid fa-volume-low"></i>
+                                <input type="range" id="settings-volume" min="0" max="1" step="0.1" value="0.7">
+                                <i class="fa-solid fa-volume-high"></i>
+                            </div>
+                        </div>
+
+                        <div class="setting-row">
+                            <div class="setting-info">
+                                <span class="setting-label">Alert Duration</span>
+                                <span class="setting-description">How long an alarm will keep ringing before self-muting.</span>
+                            </div>
+                            <select id="settings-alert-duration" class="select-input">
+                                <option value="10">10 Seconds</option>
+                                <option value="30" selected>30 Seconds</option>
+                                <option value="60">1 Minute</option>
+                                <option value="300">5 Minutes</option>
+                            </select>
+                        </div>
+
+                        <div class="test-controls mt-4">
+                            <button id="test-sound-btn" class="btn btn-secondary">
+                                <i class="fa-solid fa-volume-high"></i> Test Sound Profile
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Visual Customization -->
+                    <div class="glass-card settings-card">
+                        <h3><i class="fa-solid fa-wand-magic-sparkles"></i> Themes & Styling</h3>
+                        
+                        <div class="setting-row">
+                            <div class="setting-info">
+                                <span class="setting-label">UI Aesthetic</span>
+                                <span class="setting-description">Pick a background visual environment.</span>
+                            </div>
+                            <div class="theme-picker-grid">
+                                <div class="theme-swatch active" data-theme="default" style="background: linear-gradient(135deg, #1e1b4b, #311042);">
+                                    <span>Midnight Violet</span>
+                                </div>
+                                <div class="theme-swatch" data-theme="emerald" style="background: linear-gradient(135deg, #022c22, #052e16);">
+                                    <span>Deep Forest</span>
+                                </div>
+                                <div class="theme-swatch" data-theme="cyber" style="background: linear-gradient(135deg, #09090b, #172554);">
+                                    <span>Neon Cyber</span>
+                                </div>
+                                <div class="theme-swatch" data-theme="sunset" style="background: linear-gradient(135deg, #450a0a, #431407);">
+                                    <span>Sunset Glow</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="setting-row">
+                            <div class="setting-info">
+                                <span class="setting-label">Clear All Data</span>
+                                <span class="setting-description">Deletes all saved tasks, drawings, and notepad entries.</span>
+                            </div>
+                            <button id="clear-all-data-btn" class="btn btn-danger">
+                                <i class="fa-solid fa-trash-arrow-up"></i> Format LocalStorage
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- MODAL: ADD / EDIT TASK -->
+    <div class="modal-overlay" id="task-modal">
+        <div class="glass-card modal-container">
+            <div class="modal-header">
+                <h3 id="modal-task-title">Create New Task</h3>
+                <button class="modal-close-btn" id="close-task-modal-btn">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="task-form">
+                    <input type="hidden" id="task-form-id">
+                    
+                    <div class="form-group">
+                        <label for="task-title">Task Title <span class="required">*</span></label>
+                        <input type="text" id="task-title" required placeholder="e.g. Code database migrations">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="task-desc">Description</label>
+                        <textarea id="task-desc" placeholder="Details about this task..."></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="task-category">Category</label>
+                            <select id="task-category" class="select-input">
+                                <option value="Work">💼 Work</option>
+                                <option value="Personal">🏠 Personal</option>
+                                <option value="Health">💪 Health</option>
+                                <option value="Studies">📚 Studies</option>
+                                <option value="Other">✨ Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="task-priority">Priority</label>
+                            <select id="task-priority" class="select-input">
+                                <option value="low">🟢 Low</option>
+                                <option value="medium" selected>🟡 Medium</option>
+                                <option value="high">🔴 High</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="task-deadline-date">Deadline Date <span class="required">*</span></label>
+                            <input type="date" id="task-deadline-date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="task-deadline-time">Deadline Time <span class="required">*</span></label>
+                            <input type="time" id="task-deadline-time" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row-checkbox">
+                        <div class="toggle-switch-wrapper">
+                            <input type="checkbox" id="task-alert-enabled" checked>
+                            <label for="task-alert-enabled" class="toggle-slider"></label>
+                        </div>
+                        <label for="task-alert-enabled" class="checkbox-label">
+                            Enable Sound Alert Alarm at Deadline
+                        </label>
+                    </div>
+
+                    <div class="form-group" id="task-sound-selection-container">
+                        <label for="task-sound">Alert Sound</label>
+                        <select id="task-sound" class="select-input">
+                            <option value="chime">Harmonic Zen Chime</option>
+                            <option value="beep">Digital Double Beep</option>
+                            <option value="urgent">Urgent Warning Pulse</option>
+                            <option value="melody">Relaxing Melody Chime</option>
+                        </select>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" id="cancel-task-btn">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Task</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: SOUND ALARM ACTIVE (DEADLINE MET) -->
+    <div class="modal-overlay alarm-overlay" id="alarm-modal">
+        <div class="glass-card alarm-modal-container">
+            <div class="alarm-glow-ring"></div>
+            <div class="alarm-bell-icon">
+                <i class="fa-solid fa-bell fa-shake"></i>
+            </div>
+            
+            <h2 class="alarm-title">Deadline Reached!</h2>
+            <div class="alarm-task-details">
+                <h3 id="alarm-task-name">Submit Weekly Report</h3>
+                <p id="alarm-task-desc">Make sure to export data and email it to managers.</p>
+                <div class="alarm-meta">
+                    <span id="alarm-task-category">💼 Work</span>
+                    <span id="alarm-task-priority" class="priority-badge-high">High Priority</span>
+                </div>
+            </div>
+
+            <div class="alarm-actions">
+                <button class="btn btn-secondary btn-lg" id="alarm-snooze-btn">
+                    <i class="fa-solid fa-clock"></i> Snooze (5m)
+                </button>
+                <button class="btn btn-primary btn-lg" id="alarm-dismiss-btn">
+                    <i class="fa-solid fa-check"></i> Complete & Dismiss
+                </button>
+            </div>
+            <button class="alarm-mute-btn" id="alarm-mute-only-btn">
+                Just Mute Alarm Sound
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL: INSERT DRAWING TO NOTE -->
+    <div class="modal-overlay" id="gallery-modal">
+        <div class="glass-card modal-container modal-md">
+            <div class="modal-header">
+                <h3>Select Drawing to Insert</h3>
+                <button class="modal-close-btn" id="close-gallery-modal-btn">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="gallery-grid" id="gallery-grid-container">
+                    <!-- Gallery items injected here -->
+                </div>
+                <div id="gallery-empty" class="empty-state hidden">
+                    <i class="fa-solid fa-wand-magic"></i>
+                    <p>No drawings saved yet. Open Draw Board, paint, and click 'Save Image'!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS Core -->
+    <script src="js/app.js"></script>
+</body>
+</html>
