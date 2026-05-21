@@ -40,7 +40,7 @@ I created this project to have an all-in-one productivity workspace where I can:
 
 ### Dashboard
 - Task statistics overview
-- Pending / completed task counts
+- Pending/completed task counts
 - Upcoming deadline insights
 - Progress visualization
 
@@ -60,12 +60,5 @@ I created this project to have an all-in-one productivity workspace where I can:
 ## Storage
 All application data is stored locally in the browser using LocalStorage. No backend or server setup is required.
 
-## Run Locally
-Simply open `index.html` in your browser.
-
-## Future Improvements
-- Task reminders before deadlines
-- Drag and drop task organization
-- Cloud sync
 - User authentication
 - Export/import task data
